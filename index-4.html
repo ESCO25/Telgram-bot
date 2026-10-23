@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>مزرعة السحوبات</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&display=swap" rel="stylesheet">
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root{
+  --night1:#0d0a26; --night2:#1b1847; --night3:#2b3a72;
+  --wood1:#7a4a22; --wood2:#5b3517; --wood3:#44270f; --edge:#26150a; --edge2:#150a03;
+  --cream:#fff1c9; --sand:#ffd98a;
+  --gold1:#ffe27a; --gold2:#f0a81a; --goldline:#8a5a0a;
+  --green1:#a6ee62; --green2:#4aa51e; --greenline:#1f4a0c;
+  --red1:#ff8a7a; --red2:#d93a2b; --redline:#6e140c;
+  --font:"Baloo Bhaijaan 2","Segoe UI",Tahoma,system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--night1)}
+body{
+  margin:0;min-height:100vh;color:var(--cream);font:500 16px/1.55 var(--font);
+  background:linear-gradient(180deg,var(--night1) 0%,var(--night2) 55%,var(--night3) 100%) fixed;
+  padding:0 0 120px;overflow-x:hidden;
+}
+
+/* ===== خلفية: نجوم + قمر + تلال + فقاعات ===== */
+.sky,.hills,.bubbles{position:fixed;inset:0;pointer-events:none;z-index:0}
+.stars{position:absolute;inset:0;
+  background:
+    radial-gradient(2px 2px at 12% 18%,#fff 50%,transparent 51%),
+    radial-gradient(1.5px 1.5px at 28% 8%,#fff 50%,transparent 51%),
+    radial-gradient(2px 2px at 44% 22%,#cfe3ff 50%,transparent 51%),
+    radial-gradient(1.5px 1.5px at 63% 11%,#fff 50%,transparent 51%),
+    radial-gradient(2px 2px at 78% 26%,#fff 50%,transparent 51%),
+    radial-gradient(1.5px 1.5px at 90% 7%,#ffe9a8 50%,transparent 51%),
+    radial-gradient(1.5px 1.5px at 6% 40%,#fff 50%,transparent 51%),
+    radial-gradient(2px 2px at 95% 44%,#cfe3ff 50%,transparent 51%);
+  animation:twinkle 3.5s ease-in-out infinite alternate}
+.moon{position:absolute;top:70px;left:22px;width:54px;height:54px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#fffbe6,#ffe9a8 60%,#f3d27a);
+  box-shadow:0 0 30px 8px rgba(255,233,168,.35);animation:bob 6s ease-in-out infinite}
+.moon::after{content:"";position:absolute;top:14px;left:26px;width:10px;height:10px;border-radius:50%;background:rgba(0,0,0,.08);box-shadow:-14px 16px 0 -2px rgba(0,0,0,.07)}
+.hills{top:auto;height:22vh;min-height:130px;
+  background:
+    radial-gradient(ellipse 70% 100% at 18% 100%,#1f6a35 0 62%,transparent 63%),
+    radial-gradient(ellipse 80% 90% at 82% 100%,#18532a 0 62%,transparent 63%),
+    radial-gradient(ellipse 100% 60% at 50% 100%,#0f3a1d 0 70%,transparent 71%)}
+.bubbles i{position:absolute;bottom:-60px;border-radius:50%;
+  background:radial-gradient(circle at 30% 28%,rgba(255,255,255,.7),rgba(150,205,255,.22) 45%,rgba(150,205,255,.06) 75%);
+  border:1.5px solid rgba(255,255,255,.28);
+  box-shadow:inset 0 0 8px rgba(255,255,255,.25),0 0 10px rgba(120,180,255,.18);
+  animation:rise linear infinite}
+main{position:relative;z-index:1}
+
+/* ===== اللوحة العلوية ===== */
+.sign{position:relative;margin:16px 14px 6px;padding:12px 14px 10px;text-align:center;
+  background:repeating-linear-gradient(90deg,rgba(0,0,0,.09) 0 2px,transparent 2px 10px),linear-gradient(var(--wood1),var(--wood3));
+  border:3px solid var(--edge);border-radius:16px;
+  box-shadow:0 5px 0 var(--edge2),0 12px 22px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,220,160,.3);
+  animation:bob 4s ease-in-out infinite}
+.sign::before,.sign::after{content:"";position:absolute;top:-22px;width:3px;height:22px;background:#9a7a4a;border-radius:2px}
+.sign::before{right:26%}.sign::after{left:26%}
+.sign h1{margin:0;font-size:25px;font-weight:800;line-height:1.2;color:var(--gold1);
+  text-shadow:0 3px 0 var(--edge2),0 0 14px rgba(255,200,60,.45),-1px -1px 0 var(--edge2),1px -1px 0 var(--edge2)}
+.sign small{color:var(--sand);font-size:13px;opacity:.9}
+
+/* ===== التبويبات ===== */
+.tabs{position:sticky;top:0;z-index:6;display:flex;gap:8px;padding:12px 14px 10px;
+  background:linear-gradient(180deg,rgba(13,10,38,.92),rgba(13,10,38,0));backdrop-filter:blur(2px)}
+.tabs button{flex:1;padding:9px 4px 8px;border:3px solid var(--edge);border-radius:14px;
+  background:linear-gradient(var(--wood1),var(--wood2));color:var(--cream);font:800 15px var(--font);
+  text-shadow:0 2px 0 var(--edge2);box-shadow:0 4px 0 var(--edge2),inset 0 2px 0 rgba(255,220,160,.3);
+  transition:transform .08s,box-shadow .08s}
+.tabs button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge2)}
+.tabs button.on{background:linear-gradient(var(--green1),var(--green2));border-color:var(--greenline);color:#17370a;
+  text-shadow:0 1px 0 rgba(255,255,255,.45);box-shadow:0 4px 0 #11300a,inset 0 2px 0 rgba(255,255,255,.5),0 0 16px rgba(130,230,70,.4)}
+
+/* ===== البطاقات (ألواح خشب) ===== */
+section{padding:4px 14px 0}
+.card{position:relative;margin-bottom:16px;padding:16px 14px 14px;
+  background:repeating-linear-gradient(90deg,rgba(0,0,0,.08) 0 2px,transparent 2px 9px),linear-gradient(var(--wood2),var(--wood3));
+  border:3px solid var(--edge);border-radius:18px;
+  box-shadow:0 5px 0 var(--edge2),0 12px 20px rgba(0,0,0,.45),inset 0 2px 0 rgba(255,220,160,.25);
+  animation:pop .5s cubic-bezier(.2,1.4,.4,1) both}
+.card::before,.card::after{content:"";position:absolute;top:8px;width:8px;height:8px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#d9c08a,#6b5230);box-shadow:0 1px 0 var(--edge2)}
+.card::before{right:9px}.card::after{left:9px}
+section>.card:nth-child(2){animation-delay:.07s}
+section>.card:nth-child(3){animation-delay:.14s}
+section>.card:nth-child(4){animation-delay:.21s}
+.ct{display:inline-block;margin:-4px 0 12px;padding:3px 16px 2px;border:2px solid var(--goldline);border-radius:10px;
+  background:linear-gradient(var(--gold1),var(--gold2));color:#4a2a05;font-weight:800;font-size:15px;
+  text-shadow:0 1px 0 rgba(255,255,255,.5);box-shadow:0 3px 0 var(--goldline)}
+label{display:block;margin:12px 0 6px;color:var(--sand);font-weight:700;font-size:14px;text-shadow:0 2px 0 var(--edge2)}
+label:first-child{margin-top:0}
+.cnt{float:left;font-size:12px;opacity:.8}
+
+input,select,textarea{width:100%;padding:11px 13px;border:2px solid var(--edge2);border-radius:13px;
+  background:#1f140c;color:var(--cream);font:500 16px var(--font);outline:none;color-scheme:dark;
+  box-shadow:inset 0 3px 7px rgba(0,0,0,.65),0 1px 0 rgba(255,220,160,.22);transition:border-color .15s,box-shadow .15s}
+input::placeholder,textarea::placeholder{color:rgba(255,241,201,.4)}
+input:focus,select:focus,textarea:focus{border-color:var(--gold2);
+  box-shadow:inset 0 3px 7px rgba(0,0,0,.65),0 0 0 3px rgba(255,200,61,.35)}
+option{background:#1f140c;color:var(--cream)}
+textarea{resize:none}
+
+/* عداد الفائزين */
+.stepper{display:flex;gap:10px;align-items:center}
+.stepper input{text-align:center;font-size:20px;font-weight:800;color:var(--gold1)}
+.stepper button{flex:none;width:52px;height:46px;border:3px solid var(--edge);border-radius:14px;font:800 24px var(--font);color:#fff;
+  box-shadow:0 4px 0 var(--edge2),inset 0 2px 0 rgba(255,255,255,.4);transition:transform .08s,box-shadow .08s}
+.stepper button:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge2)}
+#wm{background:linear-gradient(var(--red1),var(--red2));border-color:var(--redline)}
+#wp{background:linear-gradient(var(--green1),var(--green2));border-color:var(--greenline)}
+
+/* الوقت */
+.seg{display:flex;gap:4px;margin-bottom:12px;padding:4px;border-radius:13px;background:#1f140c;box-shadow:inset 0 3px 7px rgba(0,0,0,.65)}
+.seg button{flex:1;padding:7px;border:0;border-radius:10px;background:transparent;color:var(--sand);font:700 14px var(--font)}
+.seg button.on{background:linear-gradient(var(--gold1),var(--gold2));color:#4a2a05;box-shadow:0 2px 0 var(--goldline)}
+.dur{display:flex;gap:8px}
+.dur div{flex:1;text-align:center}
+.dur input{text-align:center;font-weight:800;font-size:19px}
+.dur span{display:block;margin-top:4px;font-size:12px;color:var(--sand)}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.chips button{padding:4px 13px 3px;border:2px solid var(--goldline);border-radius:999px;
+  background:linear-gradient(var(--gold1),var(--gold2));color:#4a2a05;font:800 13px var(--font);
+  box-shadow:0 3px 0 var(--goldline),inset 0 1px 0 rgba(255,255,255,.6);transition:transform .08s,box-shadow .08s}
+.chips button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--goldline)}
+
+.sw{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0;color:var(--cream);font-size:15px}
+.sw input{flex:none;width:30px;height:30px;accent-color:#ffc83d}
+
+/* معاينة */
+.pv{background:linear-gradient(#3a2a1a,#2a1d11);border-style:dashed;border-color:#a8793f}
+.pvh{margin-bottom:8px;font-size:12px;color:var(--sand);opacity:.8}
+#pv b{color:var(--gold1);font-size:17px}
+#pv p{margin:6px 0;white-space:pre-wrap;word-break:break-word}
+.pvb{margin-top:12px;padding:8px;text-align:center;border:3px solid var(--greenline);border-radius:13px;
+  background:linear-gradient(var(--green1),var(--green2));color:#17370a;font-weight:800;
+  box-shadow:0 4px 0 #11300a,inset 0 2px 0 rgba(255,255,255,.5)}
+
+/* تنبيه */
+.banner{margin:6px 14px 14px;padding:12px 14px;border:3px solid var(--goldline);border-radius:14px;
+  background:linear-gradient(var(--gold1),var(--gold2));color:#4a2a05;font-weight:700;font-size:14px;box-shadow:0 4px 0 var(--goldline)}
+
+/* الإدارة */
+.item{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-top:2px dashed rgba(255,217,138,.25)}
+.ct+.item,.ct+.empty{border-top:0}
+.it{min-width:0}
+.it b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--gold1)}
+.it small{color:var(--sand);opacity:.85}
+.ac{display:flex;gap:7px;flex:none}
+.ac button{padding:5px 11px 4px;border:2px solid var(--goldline);border-radius:11px;
+  background:linear-gradient(var(--gold1),var(--gold2));color:#4a2a05;font:800 13px var(--font);box-shadow:0 3px 0 var(--goldline)}
+.ac button.dn{background:linear-gradient(var(--red1),var(--red2));border-color:var(--redline);color:#fff;box-shadow:0 3px 0 var(--redline);text-shadow:0 1px 0 var(--redline)}
+.ac button:active{transform:translateY(2px);box-shadow:none}
+.empty{padding:10px;text-align:center;color:var(--sand);opacity:.8}
+.note{padding:2px 14px 16px;text-align:center;color:var(--sand);opacity:.8;font-size:13px}
+
+/* زر احتياطي خارج تلغرام */
+#fb{display:none;position:fixed;z-index:8;right:14px;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));padding:13px;
+  border:3px solid var(--greenline);border-radius:18px;background:linear-gradient(var(--green1),var(--green2));color:#17370a;
+  font:800 19px var(--font);text-shadow:0 1px 0 rgba(255,255,255,.45);box-shadow:0 5px 0 #11300a,0 0 22px rgba(130,230,70,.45),inset 0 2px 0 rgba(255,255,255,.5);
+  animation:glow 1.8s ease-in-out infinite}
+#fb:active{transform:translateY(3px);box-shadow:0 2px 0 #11300a}
+[hidden]{display:none!important}
+
+/* جزيئات الاحتفال */
+.pt{position:fixed;left:50%;bottom:90px;z-index:50;font-size:24px;pointer-events:none;animation:fly .9s ease-out forwards}
+
+@keyframes rise{0%{transform:translate(0,0) scale(.6);opacity:0}10%{opacity:1}100%{transform:translate(var(--dx,20px),-115vh) scale(1.15);opacity:.1}}
+@keyframes twinkle{from{opacity:.55}to{opacity:1}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes pop{from{opacity:0;transform:translateY(18px) scale(.9)}to{opacity:1;transform:none}}
+@keyframes glow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.15)}}
+@keyframes fly{0%{transform:translate(-50%,0) scale(.5) rotate(0);opacity:1}100%{transform:translate(calc(-50% + var(--x)),var(--y)) scale(1.2) rotate(240deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="sky"><div class="stars"></div><div class="moon"></div></div>
+<div class="hills"></div>
+
+<main>
+<header class="sign">
+  <h1>🌾 مزرعة السحوبات 🎁</h1>
+  <small>أنشئ سحبك وانشر الحماس في قناتك</small>
+</header>
+
+<div class="tabs" id="tabs">
+  <button data-t="g" class="on">🎁 سحب جديد</button>
+  <button data-t="r">⏰ تذكير</button>
+  <button data-t="m">📋 إدارة</button>
+</div>
+<div id="nochan" class="banner" hidden>⚠️ لا توجد قنوات مربوطة. أضف البوت كمشرف في قناتك ثم اضغط «ربط قناة» من لوحة البوت (/start).</div>
+
+<section id="tab-g">
+  <div class="card">
+    <label>📢 القناة</label><select id="g-ch"></select>
+    <label>🏷️ اسم المسابقة</label><input id="g-title" maxlength="100" placeholder="مثال: سحب هدية الموسم">
+    <label>📜 الوصف والشروط <span class="cnt" id="g-cnt">0/600</span></label>
+    <textarea id="g-desc" rows="4" maxlength="600" placeholder="اكتب شروط المشاركة والجائزة..."></textarea>
+    <label>🏆 عدد الفائزين</label>
+    <div class="stepper"><button type="button" id="wm">−</button><input id="g-w" type="number" value="1" min="1" max="100" inputmode="numeric"><button type="button" id="wp">+</button></div>
+  </div>
+  <div class="card"><div class="ct">⏰ وقت الانتهاء</div><div id="gt"></div></div>
+  <div class="card"><label class="sw"><span>🖼 إضافة صورة (ترسلها للبوت بعد الضغط على نشر)</span><input type="checkbox" id="g-photo"></label></div>
+  <div class="card pv"><div class="pvh">👀 معاينة المنشور</div><div id="pv"></div><div class="pvb">🎉 شارك (0)</div></div>
+</section>
+
+<section id="tab-r" hidden>
+  <div class="card">
+    <label>📢 القناة</label><select id="r-ch"></select>
+    <label>💬 نص التذكير <span class="cnt" id="r-cnt">0/3500</span></label>
+    <textarea id="r-text" rows="6" maxlength="3500" placeholder="اكتب الرسالة التي ستُرسل في القناة..."></textarea>
+  </div>
+  <div class="card"><div class="ct">🕒 موعد الإرسال</div><div id="rt"></div></div>
+  <div class="card">
+    <label>🗑 حذف الرسالة تلقائياً بعد</label>
+    <select id="r-del">
+      <option value="0">لا تُحذف (تبقى)</option>
+      <option value="3600">ساعة</option>
+      <option value="21600">6 ساعات</option>
+      <option value="43200">12 ساعة</option>
+      <option value="86400">24 ساعة</option>
+      <option value="259200">3 أيام</option>
+      <option value="604800">7 أيام</option>
+    </select>
+    <label>🔁 التكرار</label>
+    <select id="r-rep">
+      <option value="0">مرة واحدة</option>
+      <option value="3600">كل ساعة</option>
+      <option value="21600">كل 6 ساعات</option>
+      <option value="43200">كل 12 ساعة</option>
+      <option value="86400">يومياً</option>
+      <option value="604800">أسبوعياً</option>
+    </select>
+  </div>
+</section>
+
+<section id="tab-m" hidden>
+  <div class="card" id="mg"></div>
+  <div class="card" id="mr"></div>
+  <div class="note">لتعديل سحب أو استبدال فائز أو ربط/فك ربط قناة استخدم لوحة البوت (/start).</div>
+</section>
+</main>
+
+<button id="fb" type="button"></button>
+
+<script>
+const tg = window.Telegram.WebApp;
+tg.ready(); tg.expand();
+try { tg.setHeaderColor('#1b1847'); tg.setBackgroundColor('#0d0a26'); } catch(e) {}
+try { tg.MainButton.setParams({color:'#6fcf3a', text_color:'#17370a'}); } catch(e) {}
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt = ts => { try { return new Date(ts*1000).toLocaleString('ar-u-nu-latn',{dateStyle:'medium',timeStyle:'short'}); } catch(e){ return new Date(ts*1000).toLocaleString(); } };
+const durTxt = s => { const d=Math.floor(s/86400),h=Math.floor(s%86400/3600); return d? d+' يوم' : h? h+' ساعة' : Math.round(s/60)+' دقيقة'; };
+
+// ---- فقاعات متحركة ----
+(function(){
+  const w = document.createElement('div'); w.className = 'bubbles';
+  for (let i = 0; i < 18; i++) {
+    const b = document.createElement('i'), s = 10 + Math.random()*40;
+    b.style.cssText = `left:${Math.random()*100}%;width:${s}px;height:${s}px;animation-duration:${9+Math.random()*11}s;animation-delay:${-Math.random()*16}s;--dx:${Math.random()*80-40}px`;
+    w.appendChild(b);
+  }
+  document.body.prepend(w);
+})();
+function burst() {
+  const em = ['🪙','⭐','🌾','🥚','✨','🎁'];
+  for (let i = 0; i < 14; i++) {
+    const s = document.createElement('span'); s.className = 'pt';
+    s.textContent = em[Math.floor(Math.random()*em.length)];
+    s.style.setProperty('--x', (Math.random()*260-130)+'px');
+    s.style.setProperty('--y', -(140+Math.random()*200)+'px');
+    document.body.appendChild(s); setTimeout(() => s.remove(), 950);
+  }
+}
+
+// ---- البيانات القادمة من البوت ----
+let D = {c:[],g:[],r:[]};
+try {
+  const p = new URLSearchParams(location.search).get('d');
+  if (p) {
+    const b = p.replace(/-/g,'+').replace(/_/g,'/');
+    const bin = atob(b + '='.repeat((4 - b.length % 4) % 4));
+    D = Object.assign(D, JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, c => c.charCodeAt(0)))));
+  }
+} catch(e) {}
+
+// ---- مكوّن الوقت ----
+function mountTime(id, def, allowNow) {
+  const el = $(id); el.dataset.mode = 'd';
+  const chips = [['30 د',0,0,30],['ساعة',0,1,0],['6 س',0,6,0],['يوم',1,0,0],['3 أيام',3,0,0],['أسبوع',7,0,0]];
+  if (allowNow) chips.unshift(['الآن',0,0,0]);
+  el.innerHTML = `
+    <div class="seg"><button type="button" data-m="d" class="on">بعد مدة</button><button type="button" data-m="a">تاريخ محدد</button></div>
+    <div data-p="d">
+      <div class="dur">
+        <div><input type="number" min="0" inputmode="numeric" id="${id}-d" value="${def[0]}"><span>يوم</span></div>
+        <div><input type="number" min="0" inputmode="numeric" id="${id}-h" value="${def[1]}"><span>ساعة</span></div>
+        <div><input type="number" min="0" inputmode="numeric" id="${id}-m" value="${def[2]}"><span>دقيقة</span></div>
+      </div>
+      <div class="chips">${chips.map(c=>`<button type="button" data-c="${c[1]},${c[2]},${c[3]}">${c[0]}</button>`).join('')}</div>
+    </div>
+    <div data-p="a" hidden><input type="datetime-local" id="${id}-dt"></div>`;
+  el.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.m) {
+      el.dataset.mode = b.dataset.m;
+      el.querySelectorAll('.seg button').forEach(x => x.classList.toggle('on', x === b));
+      el.querySelector('[data-p="d"]').hidden = b.dataset.m !== 'd';
+      el.querySelector('[data-p="a"]').hidden = b.dataset.m !== 'a';
+    } else if (b.dataset.c) {
+      const [d,h,m] = b.dataset.c.split(',');
+      $(id+'-d').value = d; $(id+'-h').value = h; $(id+'-m').value = m;
+    }
+    updatePv();
+  });
+}
+function getTs(id) {
+  const el = $(id);
+  if (el.dataset.mode === 'a') {
+    const v = $(id+'-dt').value; if (!v) return 0;
+    return Math.floor(new Date(v).getTime() / 1000);
+  }
+  const n = k => Math.max(0, parseInt($(id+'-'+k).value) || 0);
+  return Math.floor(Date.now()/1000) + n('d')*86400 + n('h')*3600 + n('m')*60;
+}
+
+// ---- واجهة ----
+function err(m) {
+  try { tg.HapticFeedback.notificationOccurred('error'); } catch(e) {}
+  try { tg.showAlert(m); } catch(e) { alert(m); }
+  return false;
+}
+function fillChannels() {
+  const opts = D.c.map(([id,t]) => `<option value="${id}">${esc(t)}</option>`).join('');
+  $('g-ch').innerHTML = opts; $('r-ch').innerHTML = opts;
+  $('nochan').hidden = D.c.length > 0;
+}
+function updatePv() {
+  const t = $('g-title').value.trim() || 'اسم المسابقة';
+  const d = $('g-desc').value.trim() || 'وصف المسابقة وشروطها...';
+  const w = parseInt($('g-w').value) || 1, ts = getTs('gt');
+  $('pv').innerHTML = `<b>🎁 ${esc(t)}</b><p>${esc(d)}</p><div>🏆 عدد الفائزين: <b>${w}</b></div><div>⏰ ينتهي: <b>${ts ? fmt(ts) : '—'}</b></div>`;
+  $('g-cnt').textContent = $('g-desc').value.length + '/600';
+  $('r-cnt').textContent = $('r-text').value.length + '/3500';
+}
+
+let busy = false;
+function send(obj) {
+  if (busy) return; busy = true;
+  burst();
+  try { tg.HapticFeedback.notificationOccurred('success'); } catch(e) {}
+  setTimeout(() => {
+    try { tg.sendData(JSON.stringify(obj)); }
+    catch(e) { alert('افتح التطبيق من داخل تلغرام عبر زر البوت'); busy = false; }
+  }, 450);
+}
+function submitG() {
+  const ch = $('g-ch').value; if (!ch) return err('اربط قناة أولاً من لوحة البوت');
+  const title = $('g-title').value.trim(); if (!title) return err('اكتب اسم المسابقة');
+  const desc = $('g-desc').value.trim(); if (!desc) return err('اكتب وصف المسابقة');
+  const w = parseInt($('g-w').value) || 0; if (w < 1 || w > 100) return err('عدد الفائزين بين 1 و 100');
+  const ts = getTs('gt'); if (!ts || ts < Date.now()/1000 + 60) return err('وقت الانتهاء يجب أن يكون بعد دقيقة على الأقل');
+  send({action:'giveaway', channel_id:+ch, title, desc, winners:w, end_ts:ts, want_photo:$('g-photo').checked});
+}
+function submitR() {
+  const ch = $('r-ch').value; if (!ch) return err('اربط قناة أولاً من لوحة البوت');
+  const text = $('r-text').value.trim(); if (!text) return err('اكتب نص التذكير');
+  const ts = getTs('rt'); if (!ts) return err('اختر موعد الإرسال');
+  if (ts < Date.now()/1000 - 60) return err('الموعد في الماضي');
+  const rep = +$('r-rep').value, del = +$('r-del').value;
+  send({action:'reminder', channel_id:+ch, text, send_ts:ts, delete_after:del, repeat:rep});
+}
+
+function renderManage() {
+  let g = '<div class="ct">🎁 السحوبات النشطة</div>';
+  g += D.g.length ? D.g.map(([id,t,n,e]) => `<div class="item"><div class="it"><b>${esc(t)}</b><small>👥 ${n} · ⏰ ${fmt(e)}</small></div><div class="ac"><button data-a="end" data-id="${id}">⏹ إنهاء</button><button class="dn" data-a="cancel_giveaway" data-id="${id}">❌ إلغاء</button></div></div>`).join('') : '<div class="empty">لا توجد سحوبات نشطة 🌱</div>';
+  let r = '<div class="ct">⏰ التذكيرات المجدولة</div>';
+  r += D.r.length ? D.r.map(([id,t,ts,rep]) => `<div class="item"><div class="it"><b>${esc(t)}</b><small>🕒 ${fmt(ts)}${rep ? ' · 🔁 كل ' + durTxt(rep) : ''}</small></div><div class="ac"><button class="dn" data-a="del_reminder" data-id="${id}">🗑 حذف</button></div></div>`).join('') : '<div class="empty">لا توجد تذكيرات مجدولة 🌙</div>';
+  $('mg').innerHTML = g; $('mr').innerHTML = r;
+}
+const confirmTxt = {end:'إنهاء السحب الآن واختيار الفائزين؟', cancel_giveaway:'إلغاء السحب بدون فائزين؟', del_reminder:'حذف هذا التذكير؟'};
+$('tab-m').addEventListener('click', e => {
+  const b = e.target.closest('button[data-a]'); if (!b) return;
+  const act = b.dataset.a, id = +b.dataset.id;
+  const go = ok => { if (ok) send({action:act, id}); };
+  try { tg.showConfirm(confirmTxt[act], go); } catch(x) { go(confirm(confirmTxt[act])); }
+});
+
+// ---- التبويبات والزر الرئيسي ----
+let cur = 'g';
+const tabBtns = [...document.querySelectorAll('#tabs button')];
+function applyTab(t) {
+  cur = t;
+  ['g','r','m'].forEach(x => $('tab-'+x).hidden = x !== t);
+  tabBtns.forEach(b => b.classList.toggle('on', b.dataset.t === t));
+  const label = t === 'g' ? '🚀 نشر السحب' : t === 'r' ? '⏰ جدولة التذكير' : '';
+  const inTg = !!tg.initData;
+  if (label) {
+    if (inTg) { tg.MainButton.setText(label); tg.MainButton.show(); }
+    else { $('fb').textContent = label; $('fb').style.display = 'block'; }
+  } else {
+    if (inTg) tg.MainButton.hide(); else $('fb').style.display = 'none';
+  }
+  window.scrollTo(0, 0);
+}
+tabBtns.forEach(b => b.addEventListener('click', () => { try { tg.HapticFeedback.selectionChanged(); } catch(e) {} applyTab(b.dataset.t); }));
+const act = () => { if (cur === 'g') submitG(); else if (cur === 'r') submitR(); };
+tg.MainButton.onClick(act);
+$('fb').addEventListener('click', act);
+
+$('wm').onclick = () => { $('g-w').value = Math.max(1, (parseInt($('g-w').value)||1) - 1); updatePv(); };
+$('wp').onclick = () => { $('g-w').value = Math.min(100, (parseInt($('g-w').value)||1) + 1); updatePv(); };
+document.addEventListener('input', updatePv);
+
+mountTime('gt', [1,0,0], false);
+mountTime('rt', [0,1,0], true);
+fillChannels(); renderManage(); updatePv(); applyTab('g');
+</script>
+</body>
+</html>
